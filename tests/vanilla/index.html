@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RastaDikhao · unique IDs</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      body {
+        background: #f6f9fc;
+      }
+      .card-hover {
+        transition: all 0.2s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 30px -10px rgba(0, 20, 30, 0.15);
+      }
+      .btn-glow {
+        transition: all 0.15s ease;
+      }
+      .btn-glow:hover {
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+        transform: scale(1.02);
+      }
+      /* optional small debug helper: outline IDs for clarity (remove if not needed) */
+      /* but we keep it clean */
+    </style>
+  </head>
+  <body class="antialiased text-gray-800">
+    <div class="max-w-5xl mx-auto px-5 py-10 md:py-14">
+      <!-- ======= HEADER ======= -->
+      <div class="flex flex-wrap items-center justify-between mb-12">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🧭</span>
+          <h1
+            class="text-3xl md:text-4xl font-bold tracking-tight text-gray-800"
+          >
+            Rasta<span class="text-indigo-500">Dikhao</span>
+          </h1>
+          <span
+            class="ml-2 text-sm font-medium bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full"
+            >playground</span
+          >
+        </div>
+        <div class="flex items-center gap-4 mt-3 md:mt-0">
+          <!-- UNIQUE ID: signup-btn (already unique, but we keep it) -->
+          <button
+            id="signup-btn"
+            class="bg-white border border-gray-200 hover:border-indigo-300 text-gray-700 font-medium px-6 py-2.5 rounded-xl shadow-sm btn-glow transition-all"
+          >
+            Sign n
+          </button>
+          <!-- UNIQUE ID: buy-btn (already unique) -->
+          <button
+            id="buy-btn"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-7 py-2.5 rounded-xl shadow-md btn-glow transition-all"
+          >
+            Buy Now
+          </button>
+        </div>
+      </div>
+
+      <!-- ======= CARDS ======= -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-14">
+        <!-- card 1: discover -> unique id: card-discover -->
+        <div
+          id="card-discover"
+          class="card-hover bg-white p-7 rounded-3xl shadow-md border border-white/50"
+        >
+          <div
+            class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500 text-2xl mb-5"
+          >
+            🌿
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800">Discover</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mt-2">
+            Explore curated paths, hidden gems and local insights — all in one
+            place.
+          </p>
+          <!-- inner button (if you consider it a "button") we give id: discover-more -->
+          <div
+            id="discover-more"
+            class="mt-5 text-indigo-500 text-sm font-medium flex items-center gap-1 cursor-pointer"
+          >
+            Learn more <span>→</span>
+          </div>
+        </div>
+
+        <!-- card 2: connect -> unique id: card-connect -->
+        <div
+          id="card-connect"
+          class="card-hover bg-white p-7 rounded-3xl shadow-md border border-white/50"
+        >
+          <div
+            class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-400 text-2xl mb-5"
+          >
+            🤝
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800">Connect</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mt-2">
+            Join a vibrant community of explorers, creators and wayfinders.
+          </p>
+          <div
+            id="connect-now"
+            class="mt-5 text-rose-400 text-sm font-medium flex items-center gap-1 cursor-pointer"
+          >
+            Join now <span>→</span>
+          </div>
+        </div>
+
+        <!-- card 3: grow -> unique id: card-grow -->
+        <div
+          id="card-grow"
+          class="card-hover bg-white p-7 rounded-3xl shadow-md border border-white/50"
+        >
+          <div
+            class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-2xl mb-5"
+          >
+            📈
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800">Grow</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mt-2">
+            Unlock tools, analytics and opportunities to scale your journey.
+          </p>
+          <div
+            id="explore-grow"
+            class="mt-5 text-emerald-500 text-sm font-medium flex items-center gap-1 cursor-pointer"
+          >
+            Explore <span>→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= FEATURED / CTA SECTION ======= -->
+      <div
+        id="featured-cta"
+        class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-3xl p-8 md:p-12 shadow-inner border border-white/60"
+      >
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+        >
+          <div>
+            <span
+              id="new-badge"
+              class="inline-block bg-indigo-200/70 text-indigo-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-3"
+            >
+              ✨ new experience
+            </span>
+            <h2
+              class="text-2xl md:text-3xl font-bold text-gray-800 leading-tight"
+            >
+              Your next adventure <br class="hidden sm:block" />
+              <span class="text-indigo-600">starts here.</span>
+            </h2>
+            <p
+              id="cta-description"
+              class="text-gray-600 max-w-sm mt-2 text-sm md:text-base"
+            >
+              RastaDikhao brings you authentic routes, real stories and a fresh
+              way to see the world.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-4">
+            <!-- stat cards with unique IDs -->
+            <div
+              id="stat-explorers"
+              class="bg-white/70 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-sm text-center min-w-[100px]"
+            >
+              <span class="block text-2xl font-bold text-indigo-600">12k+</span>
+              <span class="text-xs text-gray-500">explorers</span>
+            </div>
+            <div
+              id="stat-destinations"
+              class="bg-white/70 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-sm text-center min-w-[100px]"
+            >
+              <span class="block text-2xl font-bold text-rose-500">340+</span>
+              <span class="text-xs text-gray-500">destinations</span>
+            </div>
+            <!-- CTA button with unique ID -->
+            <button
+              id="cta-get-started"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-8 py-3 rounded-2xl shadow-lg btn-glow transition-all"
+            >
+              Get started
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= FOOTER ======= -->
+      <div
+        id="footer-area"
+        class="mt-12 flex flex-wrap items-center justify-between text-xs text-gray-400 border-t border-gray-200/70 pt-6"
+      >
+        <!-- the "umair" div now has unique id: footer-umair -->
+        <div id="footer-umair" class="umair flex items-center gap-2">
+          <span
+            id="umair-badge"
+            class="bg-indigo-50 px-3 py-1 rounded-full text-indigo-400 font-mono text-[11px]"
+            >umair</span
+          >
+          <span class="hidden sm:inline">·</span>
+          <span id="version-text" class="hidden sm:inline"
+            >playground v0.1</span
+          >
+        </div>
+        <div id="footer-links" class="flex items-center gap-4">
+          <a
+            id="footer-about"
+            href="about.html"
+            class="hover:text-indigo-500 transition"
+            >about</a
+          >
+          <a
+            id="footer-privacy"
+            href="#"
+            class="hover:text-indigo-500 transition"
+            >privacy</a
+          >
+          <a
+            id="footer-contact"
+            href="#"
+            class="hover:text-indigo-500 transition"
+            >contact</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript: console log all unique IDs for verification (and keep button alerts) -->
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

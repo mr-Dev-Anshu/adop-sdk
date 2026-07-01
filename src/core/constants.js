@@ -1,0 +1,11 @@
+export const SDK_STATES = {
+  IDLE: "IDLE",
+
+  INITIALIZING: "INITIALIZING",
+
+  READY: "READY",
+
+  DESTROYED: "DESTROYED",
+
+  ERROR:"ERROR"
+};
