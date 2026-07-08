@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
   FaSearch,
   FaShoppingCart,
@@ -7,6 +8,7 @@ import {
 } from "react-icons/fa";
 
 const Product = () => {
+  const { addToCart } = useOutletContext();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [wishlist, setWishlist] = useState([]);
@@ -334,6 +336,7 @@ const Product = () => {
                 {/* Add to Cart Button */}
                 <button
                   id={`add-to-cart-${product.id}`}
+                  onClick={() => addToCart(product)}
                   className="w-full mt-2.5 py-1.5 bg-black hover:bg-gray-800 text-white text-sm font-medium rounded transition-colors flex items-center justify-center gap-1.5"
                 >
                   <FaShoppingCart

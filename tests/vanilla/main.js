@@ -1,10 +1,7 @@
 import RastaDikhao from "../../src/index.js";
-import BuilderMode from "../../src/builder/BuilderMode.js";
-import PauseManager from "../../src/builder/PauseManager.js";
-import RouteObserver from "../../src/Observer/RouteObserver.js";
 
 const sdk = RastaDikhao.init({
-  apiKey: "tenant123",
+  apiKey: "dap_live_ac34fbaac33497ddc823d96adf8a695a0c01211cbef1e05732d4b588c95367a3",
   debug: true,
 });
 

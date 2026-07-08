@@ -5,6 +5,7 @@ import SelectorGenerator from "./SelectorGenerator.js";
 import InspectorEngine from "./InspectorEngine.js";
 import BuildSessionManager from "./BuildSessionManager.js";
 import BuilderStatusUI from "./BuilderStatusUI.js";
+import SidebarRenderer from "./SidebarRenderer.js";
 
 // for starting the builder mode
 class BuilderMode {
@@ -23,6 +24,7 @@ class BuilderMode {
     this.overlayRenderer = new OverlayRenderer();
     this.attributeTooltip = new AttributeTooltip();
     this.selectorGenerator = new SelectorGenerator();
+    this.sidebarRenderer = new SidebarRenderer();
 
     this.builderStatusUI = new BuilderStatusUI();
 
@@ -30,6 +32,7 @@ class BuilderMode {
       this.overlayRenderer,
       this.selectorGenerator,
       this.attributeTooltip,
+      this.sidebarRenderer,
     );
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -50,8 +53,10 @@ class BuilderMode {
     this.attributeTooltip.create();
 
     this.builderStatusUI.create();
+    
+    this.sidebarRenderer.create();
 
-    this.inspectorEngine.start();
+    this.inspectorEngine.start(buildSession, this.config.apiKey);
 
     window.addEventListener("keydown", this.handleKeyDown);
 
@@ -67,6 +72,7 @@ class BuilderMode {
     this.inspectorEngine.stop();
     this.overlayRenderer.hide();
     this.attributeTooltip.hide();
+    this.sidebarRenderer.hide();
     this.builderStatusUI.show();
     this.state.paused = true;
     logger.debug(this.config.debug, "[BuilderMode] Paused");
@@ -76,7 +82,7 @@ class BuilderMode {
     if (!this.state.paused) {
       return;
     }
-    this.inspectorEngine.start();
+    this.inspectorEngine.start(this.state.buildSession, this.config.apiKey);
     this.state.paused = false;
     this.builderStatusUI.hide();
     logger.debug(this.config.debug, "[BuilderMode] Resumed");
@@ -109,6 +115,7 @@ class BuilderMode {
     this.inspectorEngine.stop();
 
     this.attributeTooltip.destroy();
+    this.sidebarRenderer.destroy();
 
     this.overlayRenderer.destroy();
     this.builderStatusUI.destroy();

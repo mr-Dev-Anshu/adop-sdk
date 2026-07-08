@@ -1,4 +1,5 @@
 import React from "react";
+import { useOutletContext } from "react-router-dom";
 import {
   FaArrowRight,
   FaShoppingCart,
@@ -8,6 +9,7 @@ import {
 } from "react-icons/fa";
 
 const Home = () => {
+  const { addToCart } = useOutletContext();
   // Product data - only 4 products
   const featuredProducts = [
     {
@@ -275,6 +277,7 @@ const Home = () => {
                     </span>
                     <button
                       id={`add-to-cart-${product.id}`}
+                      onClick={() => addToCart(product)}
                       className="px-3 py-1 bg-black hover:bg-gray-800 text-white text-xs rounded transition-colors"
                     >
                       Add to Cart

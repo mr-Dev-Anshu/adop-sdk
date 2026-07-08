@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   FaHome,
@@ -7,11 +7,28 @@ import {
   FaShoppingCart,
   FaBars,
   FaTimes,
-} from "react-icons/fa";  
+} from "react-icons/fa";
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cart, setCart] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("shophub_cart");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          return [];
+        }
+      }
+    }
+    return [];
+  });
   const location = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem("shophub_cart", JSON.stringify(cart));
+  }, [cart]);
 
   const navLinks = [
     { path: "/", label: "Home", icon: <FaHome />, id: "nav-home" },
@@ -26,8 +43,34 @@ const App = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      const existing = prevCart.find((item) => item.id === product.id);
+      if (existing) {
+        return prevCart.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      const priceVal = typeof product.price === "string" 
+        ? parseFloat(product.price.replace(/[^0-9.]/g, "")) 
+        : product.price;
+      return [...prevCart, { ...product, price: priceVal, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (id) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const cartTotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
   return (
-    <div id="app-container">
+    <div id="app-container" className="min-h-screen bg-white text-black font-sans relative">
       {/* Navigation Bar */}
       <nav id="navbar" className="bg-black sticky top-0 z-50 shadow-sm">
         <div id="navbar-container" className="max-w-6xl mx-auto px-4">
@@ -62,19 +105,24 @@ const App = () => {
                 </Link>
               ))}
 
-              {/* Cart Button */}
-              <button
+              {/* Cart Link Button */}
+              <Link
                 id="cart-btn"
-                className="flex items-center gap-1.5 ml-2 px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors"
+                to="/cart"
+                className={`flex items-center gap-1.5 ml-2 px-3 py-1.5 text-sm rounded transition-colors ${
+                  location.pathname === "/cart"
+                    ? "bg-purple-600 text-white"
+                    : "text-gray-300 hover:text-white hover:bg-white/10"
+                }`}
               >
                 <FaShoppingCart />
                 <span
                   id="cart-count"
-                  className="bg-gray-700 text-white px-1.5 py-0.5 rounded-full text-xs"
+                  className="bg-gray-700 text-white px-2 py-0.5 rounded-full text-xs font-semibold"
                 >
-                  3
+                  {cartCount}
                 </span>
-              </button>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -109,20 +157,26 @@ const App = () => {
                   {link.label}
                 </Link>
               ))}
-              <button
+              <Link
                 id="mobile-cart-btn"
-                className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded transition-colors w-full"
+                to="/cart"
+                onClick={() => setIsMenuOpen(false)}
+                className={`flex items-center gap-2 px-3 py-2.5 text-sm rounded transition-colors w-full ${
+                  location.pathname === "/cart"
+                    ? "bg-purple-600 text-white"
+                    : "text-gray-300 hover:text-white hover:bg-white/10"
+                }`}
               >
                 <FaShoppingCart />
-                Cart (3 items)
-              </button>
+                Cart ({cartCount} items)
+              </Link>
             </div>
           )}
         </div>
       </nav>
 
       {/* Page Content */}
-      <Outlet />
+      <Outlet context={{ cart, clearCart, cartCount, cartTotal, addToCart, removeFromCart }} />
     </div>
   );
 };
