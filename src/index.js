@@ -53,6 +53,20 @@ class RastaDikhao {
     return this.instance;
   }
 
+  static identify(endUserId, traits = {}) {
+    if (this.instance) {
+      this.instance.identify(endUserId, traits);
+    } else {
+      logger.warn("[RastaDikhao] Cannot identify user: SDK not initialized.");
+    }
+  }
+
+  static logout() {
+    if (this.instance) {
+      this.instance.logout();
+    }
+  }
+
   // Gracefully shutdown the SDK and release resources.
   static destroy() {
     if (!this.initialized) {

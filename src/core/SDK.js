@@ -25,6 +25,7 @@ class SDK {
     this.config = { ...DEFAULT_CONFIG, ...config };
 
     this.flows = [];
+    this.endUserId = typeof window !== 'undefined' ? localStorage.getItem('rd_end_user_id') : null;
     this.tourPlayer = new TourPlayer();
 
     // Initialize subsystems
@@ -74,12 +75,53 @@ class SDK {
     }
   }
 
+  identify(endUserId, traits = {}) {
+    if (!endUserId) return;
+    this.endUserId = endUserId;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('rd_end_user_id', endUserId);
+    }
+    logger.debug(this.config.debug, `[SDK] Identified user: ${endUserId}`);
+    
+    // Sync end-user attributes to the backend database
+    fetch("https://hirehunt.sheryians.com/api/v1/end-users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-tenant-id": this.config.apiKey
+      },
+      body: JSON.stringify({
+        externalId: endUserId,
+        attributes: traits
+      })
+    }).catch(err => {
+      logger.error(this.config.debug, "[SDK] Failed to sync end-user traits to server:", err);
+    });
+
+    // Refresh matching flows list for the new user profile
+    if (this.state === SDK_STATES.READY || this.state === SDK_STATES.IDLE) {
+      this.fetchAndRegisterFlows();
+    }
+  }
+
+  logout() {
+    this.endUserId = null;
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('rd_end_user_id');
+    }
+    logger.debug(this.config.debug, "[SDK] Logged out end-user");
+    if (this.tourPlayer) {
+      this.tourPlayer.cleanup();
+    }
+    this.flows = [];
+  }
+
   async verifyBuildSession(buildSession) {
     const buildKey = buildSession.buildKey;
     logger.debug(this.config.debug, `[SDK] Verifying buildKey: ${buildKey}`);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/flows/${buildKey}`, {
+      const response = await fetch(`https://hirehunt.sheryians.com/api/v1/flows/${buildKey}`, {
         method: "GET",
         headers: {
           "x-tenant-id": this.config.apiKey
@@ -105,11 +147,16 @@ class SDK {
     logger.debug(this.config.debug, "[SDK] Fetching flows in runtime mode...");
 
     try {
-      const response = await fetch("http://localhost:3000/api/v1/flows", {
+      const headers = {
+        "x-tenant-id": this.config.apiKey
+      };
+      if (this.endUserId) {
+        headers["x-end-user-id"] = this.endUserId;
+      }
+
+      const response = await fetch("https://hirehunt.sheryians.com/api/v1/flows?status=published", {
         method: "GET",
-        headers: {
-          "x-tenant-id": this.config.apiKey
-        }
+        headers
       });
 
       if (!response.ok) {

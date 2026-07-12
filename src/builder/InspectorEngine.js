@@ -92,12 +92,16 @@ class InspectorEngine {
       route: window.location.pathname,
       title: formData.title,
       description: formData.description,
-      buttonText: formData.buttonText
+      buttonText: formData.buttonText,
+      type: formData.type || 'passive',
+      blockOthers: !!formData.blockOthers,
+      onMissing: formData.onMissing || 'skip',
+      advanceTrigger: formData.advanceTrigger || 'tooltip'
     };
 
     try {
       this.sidebarRenderer.setLoadingState(true);
-      const response = await fetch("http://localhost:3000/api/v1/flows/steps", {
+      const response = await fetch("https://hirehunt.sheryians.com/api/v1/flows/steps", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

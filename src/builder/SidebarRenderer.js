@@ -170,6 +170,36 @@ class SidebarRenderer {
           <input type="text" id="rd-step-button" class="rastadikhao-input" placeholder="e.g. Next, Got it, Skip" value="Next" />
         </div>
 
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600; color: #94a3b8;">Step Mode</label>
+          <select id="rd-step-type" class="rastadikhao-input" style="background-color: #1a1a2e; color: #fff;">
+            <option value="passive">Passive Mode (dim backdrop, tooltip has Next button)</option>
+            <option value="interactive">Interactive Mode (clicks reach element directly)</option>
+          </select>
+        </div>
+
+        <div id="rd-block-clicks-container" style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="rd-step-block-others" style="cursor: pointer; width: 14px; height: 14px;" />
+          <label for="rd-step-block-others" style="font-size: 12px; font-weight: 600; color: #94a3b8; cursor: pointer; user-select: none;">Block clicks on other elements</label>
+        </div>
+
+        <div id="rd-advance-trigger-container" style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600; color: #94a3b8;">Advance Trigger</label>
+          <select id="rd-step-advance-trigger" class="rastadikhao-input" style="background-color: #1a1a2e; color: #fff;">
+            <option value="click">Click on target element</option>
+            <option value="tooltip">Manual "Next" button on tooltip</option>
+            <option value="input">Input change (typing in text field)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600; color: #94a3b8;">If element is missing</label>
+          <select id="rd-step-on-missing" class="rastadikhao-input" style="background-color: #1a1a2e; color: #fff;">
+            <option value="skip">Auto-skip to next step</option>
+            <option value="fallback">Show fallback centered tooltip</option>
+          </select>
+        </div>
+
       </div>
 
       <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.1); display: flex; gap: 12px; justify-content: flex-end;">
@@ -195,18 +225,39 @@ class SidebarRenderer {
     this.container.querySelector("#rd-btn-save").addEventListener("click", () => {
       this.handleSave();
     });
+
+    const typeSelect = this.container.querySelector("#rd-step-type");
+    const blockContainer = this.container.querySelector("#rd-block-clicks-container");
+    const advanceTriggerContainer = this.container.querySelector("#rd-advance-trigger-container");
+    
+    const updateBlockVisibility = () => {
+      const isInteractive = typeSelect.value === "interactive";
+      blockContainer.style.display = isInteractive ? "flex" : "none";
+      advanceTriggerContainer.style.display = isInteractive ? "flex" : "none";
+    };
+    
+    typeSelect.addEventListener("change", updateBlockVisibility);
+    updateBlockVisibility(); // initial state
   }
 
   handleSave() {
     const titleInput = this.container.querySelector("#rd-step-title");
     const descInput = this.container.querySelector("#rd-step-description");
     const btnInput = this.container.querySelector("#rd-step-button");
+    const typeSelect = this.container.querySelector("#rd-step-type");
+    const blockCheckbox = this.container.querySelector("#rd-step-block-others");
+    const missingSelect = this.container.querySelector("#rd-step-on-missing");
+    const advanceSelect = this.container.querySelector("#rd-step-advance-trigger");
 
     const payload = {
       selector: this.currentData.selector,
       title: titleInput.value.trim(),
       description: descInput.value.trim(),
       buttonText: btnInput.value.trim(),
+      type: typeSelect.value,
+      blockOthers: typeSelect.value === "interactive" ? blockCheckbox.checked : false,
+      onMissing: missingSelect.value,
+      advanceTrigger: typeSelect.value === "interactive" ? advanceSelect.value : "tooltip",
     };
 
     if (this.onSaveCallback) {
