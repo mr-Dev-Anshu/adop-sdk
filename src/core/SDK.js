@@ -88,7 +88,7 @@ class SDK {
     logger.debug(this.config.debug, `[SDK] Identified user: ${endUserId}`);
     
     // Sync end-user attributes to the backend database
-    fetch("https://hirehunt.sheryians.com/api/v1/end-users", {
+    fetch(`${this.config.host}/api/v1/end-users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -125,7 +125,7 @@ class SDK {
     logger.debug(this.config.debug, `[SDK] Verifying buildKey: ${buildKey}`);
 
     try {
-      const response = await fetch(`https://hirehunt.sheryians.com/api/v1/flows/${buildKey}`, {
+      const response = await fetch(`${this.config.host}/api/v1/flows/${buildKey}`, {
         method: "GET",
         headers: {
           "x-tenant-id": this.config.apiKey
@@ -184,7 +184,7 @@ class SDK {
         headers["x-end-user-id"] = this.endUserId;
       }
 
-      const response = await fetch("https://hirehunt.sheryians.com/api/v1/flows?status=published", {
+      const response = await fetch(`${this.config.host}/api/v1/flows?status=published`, {
         method: "GET",
         headers
       });

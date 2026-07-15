@@ -1,7 +1,7 @@
 import RastaDikhao from "../../src/index.js";
 
 const sdk = RastaDikhao.init({
-  apiKey: "dap_live_ac34fbaac33497ddc823d96adf8a695a0c01211cbef1e05732d4b588c95367a3",
+  apiKey: "dap_live_70c58ab91b6a257803cd96957ad94a547c12c981adfb4e06a70c58584d054911",
   debug: true,
 });
 

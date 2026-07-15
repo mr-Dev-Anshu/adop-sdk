@@ -15,7 +15,7 @@ const sdk = RastaDikhao.init({
   host: "http://localhost:3000",
   debug: true,
 });
-
+//dap_live_e12696870d4d179ae6eafafc2934ef260e8aa403fe80e2aedf6e2166b579f652
 console.log("After SDK:", window.location.href);
 
 const router = createBrowserRouter([

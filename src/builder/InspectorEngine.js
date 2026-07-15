@@ -11,11 +11,13 @@ class InspectorEngine {
     this.lockedElement = null;
     this.buildSession = null;
     this.apiKey = null;
+    this.host = null;
   }
 
-  start(buildSession, apiKey) {
+  start(buildSession, apiKey, host) {
     this.buildSession = buildSession;
     this.apiKey = apiKey;
+    this.host = host;
     this.locked = false;
     this.lockedElement = null;
     document.addEventListener("mousemove", this.handleMouseMove, true);
@@ -101,7 +103,7 @@ class InspectorEngine {
 
     try {
       this.sidebarRenderer.setLoadingState(true);
-      const response = await fetch("https://hirehunt.sheryians.com/api/v1/flows/steps", {
+      const response = await fetch(`${this.host}/api/v1/flows/steps`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
