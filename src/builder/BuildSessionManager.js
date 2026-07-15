@@ -1,6 +1,7 @@
 class BuildSessionManager {
-  constructor(buildSession) {
+  constructor(buildSession, extraParams = {}) {
     this.buildSession = buildSession;
+    this.extraParams = extraParams;
   }
 
   handleHistoryChange(data) {
@@ -19,6 +20,9 @@ class BuildSessionManager {
     const nextUrl = new URL(url, window.location.origin);
 
     nextUrl.searchParams.set("buildKey", this.buildSession.buildKey);
+    for (const [key, value] of Object.entries(this.extraParams)) {
+      nextUrl.searchParams.set(key, value);
+    }
 
     return nextUrl.pathname + nextUrl.search;
   }
