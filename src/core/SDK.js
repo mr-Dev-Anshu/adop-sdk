@@ -5,6 +5,7 @@ import { validateConfig } from "./validator.js";
 import detectMode from "./ModeDetector.js";
 import HistoryManager from "./HistoryManager.js";
 import BuilderMode from "../builder/BuilderMode.js";
+import RecordingMode from "../builder/RecordingMode.js";
 import RouteObserver from "../observer/RouteObserver.js";
 import TourPlayer from "../runtime/TourPlayer.js";
 
@@ -31,6 +32,7 @@ class SDK {
     // Initialize subsystems
     this.historyManager = new HistoryManager();
     this.builderMode = new BuilderMode(this.config, this.historyManager);
+    this.recordingMode = new RecordingMode(this.config, this.historyManager);
     this.routeObserver = new RouteObserver((route) => {
       logger.debug(this.config.debug, "[SDK] Route Changed", route);
       if (this.tourPlayer) {
@@ -62,6 +64,8 @@ class SDK {
       const mode = detectMode();
       if (mode.mode === "builder" && mode.isVerified) {
         this.verifyBuildSession(mode.buildSession);
+      } else if (mode.mode === "record" && mode.isVerified) {
+        this.verifyRecordSession(mode.buildSession);
       } else if (mode.mode === "runtime") {
         this.fetchAndRegisterFlows();
       }
@@ -143,6 +147,32 @@ class SDK {
     }
   }
 
+  async verifyRecordSession(buildSession) {
+    const buildKey = buildSession.buildKey;
+    logger.debug(this.config.debug, `[SDK] Verifying buildKey for recording: ${buildKey}`);
+
+    try {
+      const response = await fetch(`${this.config.host}/api/v1/flows/${buildKey}`, {
+        method: "GET",
+        headers: {
+          "x-tenant-id": this.config.apiKey
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Invalid buildKey (Status: ${response.status})`);
+      }
+
+      const resData = await response.json();
+      logger.warn(`[RastaDikhao] buildKey verified successfully. Recording flow: "${resData.data.name}"`);
+
+      await this.recordingMode.start(buildSession);
+    } catch (error) {
+      logger.warn(`[RastaDikhao] Verification failed for buildKey "${buildKey}". Recording mode disabled.`);
+      this.recordingMode.destroy();
+    }
+  }
+
   async fetchAndRegisterFlows() {
     logger.debug(this.config.debug, "[SDK] Fetching flows in runtime mode...");
 
@@ -199,6 +229,7 @@ class SDK {
         this.tourPlayer.cleanup();
       }
       this.builderMode.destroy();
+      this.recordingMode.destroy();
       this.historyManager.unsubscribe(this.routeObserver);
       this.historyManager.stop();
 
