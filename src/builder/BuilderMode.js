@@ -56,7 +56,7 @@ class BuilderMode {
     
     this.sidebarRenderer.create();
 
-    this.inspectorEngine.start(buildSession, this.config.apiKey);
+    this.inspectorEngine.start(buildSession, this.config.apiKey, this.config.host);
 
     window.addEventListener("keydown", this.handleKeyDown);
 
@@ -82,7 +82,7 @@ class BuilderMode {
     if (!this.state.paused) {
       return;
     }
-    this.inspectorEngine.start(this.state.buildSession, this.config.apiKey);
+    this.inspectorEngine.start(this.state.buildSession, this.config.apiKey, this.config.host);
     this.state.paused = false;
     this.builderStatusUI.hide();
     logger.debug(this.config.debug, "[BuilderMode] Resumed");

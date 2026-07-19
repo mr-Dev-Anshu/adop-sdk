@@ -11,10 +11,11 @@ import RastaDikhao from "../../../src/index.js";
 
 console.log("Before SDK:", window.location.href);
 const sdk = RastaDikhao.init({
-  apiKey: "dap_live_ac34fbaac33497ddc823d96adf8a695a0c01211cbef1e05732d4b588c95367a3",
+  apiKey: "dap_live_70c58ab91b6a257803cd96957ad94a547c12c981adfb4e06a70c58584d054911",
+  host: "http://localhost:3000",
   debug: true,
 });
-
+//dap_live_e12696870d4d179ae6eafafc2934ef260e8aa403fe80e2aedf6e2166b579f652
 console.log("After SDK:", window.location.href);
 
 const router = createBrowserRouter([
